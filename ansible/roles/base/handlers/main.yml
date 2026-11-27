@@ -1,0 +1,5 @@
+- name: Restart VM DNS resolver
+  ansible.builtin.service:
+    name: systemd-resolved
+    state: restarted
+
