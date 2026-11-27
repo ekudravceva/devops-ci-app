@@ -7,6 +7,29 @@
       - ansible_facts['architecture'] in ["x86_64", "aarch64"]
     fail_msg: "Требуется Ubuntu 24.04, 26.04 или 26.10; архитектура amd64 или arm64"
 
+- name: Create systemd-resolved configuration directory
+  ansible.builtin.file:
+    path: /etc/systemd/resolved.conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Configure persistent DNS servers
+  ansible.builtin.copy:
+    dest: /etc/systemd/resolved.conf.d/90-devops-dns.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [Resolve]
+      DNS=1.1.1.1 8.8.8.8
+      Domains=~.
+  notify: Restart VM DNS resolver
+
+- name: Apply DNS configuration before downloading packages
+  ansible.builtin.meta: flush_handlers
+
 - name: Install base packages and remote module dependencies
   ansible.builtin.apt:
     name:
