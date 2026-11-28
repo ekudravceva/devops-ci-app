@@ -152,7 +152,7 @@ jobs:
 
       - name: Deploy with Ansible
         working-directory: ansible
-        run: ansible-playbook site.yml -e "app_tag=${GITHUB_SHA} ansible_port=2223"
+        run: ansible-playbook site.yml -e "app_tag=${GITHUB_SHA}"
 
       - name: Check through Nginx
         run: >-
